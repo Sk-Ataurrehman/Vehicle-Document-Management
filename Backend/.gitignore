@@ -1,0 +1,11 @@
+node_modules/
+package-lock.json
+abis/
+build/contracts
+contracts/Migrations.sol
+test/
+config.js
+Contract.js
+eng.traineddata
+truffle-config.js
+migrations/
