@@ -188,6 +188,7 @@ export default function HeaderStats() {
             const jsonData = await response.json();
             if (jsonData.link) {
               setUrl(jsonData.link);
+              // setUrl("http://127.0.0.1:3000/admin/view");
               swal(
                 "QR Code Activated",
                 "You can now download and paste the QR on your vehicle!",

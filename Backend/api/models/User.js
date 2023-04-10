@@ -32,6 +32,7 @@ var insuranceSchema = new mongoose.Schema({
 
 var UserSchema = new mongoose.Schema(
   {
+    account: String,
     email: {
       type: String,
     },

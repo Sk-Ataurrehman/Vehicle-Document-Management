@@ -3,6 +3,8 @@ const Contract = require("../../Contract");
 const contract = new Contract();
 const instance = contract.initContract();
 
+var User = require("../models/User");
+
 router.post("/", async (req, res, next) => {
   console.log(req.body.account);
   const id = await instance.methods.getId().call();
@@ -23,6 +25,12 @@ router.post("/", async (req, res, next) => {
     pucDetails: pucDetails,
     insuranceDetails: insuranceDetails,
   });
+});
+
+router.post("/details", async (req, res, next) => {
+  var account = req.body.account;
+  var user = await User.find({ account: account }).exec();
+  res.status(200).json(user[0]);
 });
 
 module.exports = router;

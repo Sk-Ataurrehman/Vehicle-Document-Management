@@ -144,7 +144,10 @@ router.post("/uploadrc", upload.single("image"), async (req, res, next) => {
         console.log(result1);
         j.uploadImage = "/uploads/" + req.body.email + "-rc.png";
         a.push(j);
-        await User.findOneAndUpdate({ email: req.body.email }, { rc: a });
+        await User.findOneAndUpdate(
+          { email: req.body.email },
+          { rc: a, account: accounts[0] }
+        );
         return res.status(200).json(result1);
       } catch (err) {
         console.log(err);

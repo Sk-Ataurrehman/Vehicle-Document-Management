@@ -9,7 +9,7 @@ const instance = contract.initContract();
 router.post("/", async (req, res, next) => {
   const account = req.body.account;
   const boolStatus = await instance.methods.setVerified().call();
-  
+
   console.log(account);
   if (!boolStatus) {
     return res.status(200).json({
