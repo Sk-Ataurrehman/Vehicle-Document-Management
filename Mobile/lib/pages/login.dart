@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 20),
 
                   Text(
-                    'Welcome to TravelDoc',
+                    'Welcome to VehicleDoc',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                   ),
 
