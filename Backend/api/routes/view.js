@@ -18,19 +18,15 @@ router.post("/", async (req, res, next) => {
     .get_insurance_details(id)
     .call();
   console.log(insuranceDetails);
+  var account = req.body.account;
+  var user = await User.find({ account: account }).exec();
 
   return res.status(200).json({
-    userDetails: userDetails,
+    userDetails: user[0],
     rcDetails: rcDetails,
     pucDetails: pucDetails,
     insuranceDetails: insuranceDetails,
   });
-});
-
-router.post("/details", async (req, res, next) => {
-  var account = req.body.account;
-  var user = await User.find({ account: account }).exec();
-  res.status(200).json(user[0]);
 });
 
 module.exports = router;

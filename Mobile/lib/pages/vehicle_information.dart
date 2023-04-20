@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class VehicleInformation extends StatefulWidget {
   final String url;
@@ -19,7 +20,7 @@ class _VehicleInformationState extends State<VehicleInformation> {
   var jsonData;
   getDetails() async {
     try {
-      final url = "http://192.168.0.103:5000/view/details";
+      final url = "http://192.168.0.103:5000/view";
       final account = widget.url.split("/")[4];
       var json = {"account": account};
       var response = await http.post(Uri.parse(url), body: json);
@@ -29,14 +30,23 @@ class _VehicleInformationState extends State<VehicleInformation> {
     return [];
   }
 
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
             future: getDetails(),
             builder: (context, snapshot) {
-              var details = snapshot.data;
-              print(details);
+              print(snapshot.data);
+              var details = snapshot.data["userDetails"];
+              var rcHash = snapshot.data["rcDetails"]["0"];
+              var puccHash = snapshot.data["pucDetails"]["0"];
+              var insuranceHash = snapshot.data["insuranceDetails"]["0"];
               return ListView(
                 children: [
                   Container(
@@ -112,7 +122,7 @@ class _VehicleInformationState extends State<VehicleInformation> {
                   ),
                   Container(
                     width: double.infinity,
-                    height: 320,
+                    height: 400,
                     child: Card(
                       color: Colors.white,
                       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -212,13 +222,22 @@ class _VehicleInformationState extends State<VehicleInformation> {
                                   ),
                                 ),
                               )),
+                          Center(
+                              child: ElevatedButton(
+                            child: Text("View"),
+                            onPressed: () {
+                              _launchURL("https://ipfs.io/ipfs/" +
+                                  rcHash +
+                                  "/image/rc.png");
+                            },
+                          ))
                         ],
                       ),
                     ),
                   ),
                   Container(
                     width: double.infinity,
-                    height: 205,
+                    height: 250,
                     child: Card(
                       color: Colors.white,
                       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -286,13 +305,22 @@ class _VehicleInformationState extends State<VehicleInformation> {
                                   ),
                                 ),
                               )),
+                          Center(
+                              child: ElevatedButton(
+                            child: Text("View"),
+                            onPressed: () {
+                              _launchURL("https://ipfs.io/ipfs/" +
+                                  puccHash +
+                                  "/image/puc.png");
+                            },
+                          ))
                         ],
                       ),
                     ),
                   ),
                   Container(
                     width: double.infinity,
-                    height: 320,
+                    height: 400,
                     child: Card(
                       color: Colors.white,
                       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -396,6 +424,15 @@ class _VehicleInformationState extends State<VehicleInformation> {
                                   ),
                                 ),
                               )),
+                          Center(
+                              child: ElevatedButton(
+                            child: Text("View"),
+                            onPressed: () {
+                              _launchURL("https://ipfs.io/ipfs/" +
+                                  insuranceHash +
+                                  "/image/insurance.png");
+                            },
+                          ))
                         ],
                       ),
                     ),
