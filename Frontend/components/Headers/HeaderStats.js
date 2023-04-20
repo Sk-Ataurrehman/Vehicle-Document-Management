@@ -26,7 +26,7 @@ export default function HeaderStats() {
   const qrRef = useRef();
 
   let viewRCBtn;
-  if (initialState.rc) {
+  if (initialState.rc && initialState.rc[0] && initialState.rc[0].uploadImage) {
     var ref = "http://localhost:5000" + initialState.rc[0].uploadImage;
     viewRCBtn = (
       <a
@@ -41,7 +41,7 @@ export default function HeaderStats() {
   }
 
   let viewPUCCBtn;
-  if (initialState.pucc) {
+  if (initialState.pucc && initialState.pucc[0] && initialState.pucc[0].uploadImage) {
     var ref = "http://localhost:5000" + initialState.pucc[0].uploadImage;
     viewPUCCBtn = (
       <a
@@ -56,7 +56,7 @@ export default function HeaderStats() {
   }
 
   let viewInsBtn;
-  if (initialState.insurance) {
+  if (initialState.insurance && initialState.insurance[0] && initialState.insurance[0].uploadImage) {
     var ref = "http://localhost:5000" + initialState.insurance[0].uploadImage;
     viewInsBtn = (
       <a
@@ -285,7 +285,7 @@ export default function HeaderStats() {
                     />
                   </div>
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.rc ? (
+                    {initialState.rc && initialState.rc[0] && initialState.rc[0].uploadImage ? (
                       <button
                         className="bg-Green-700 active:bg-Green-700 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
@@ -335,7 +335,7 @@ export default function HeaderStats() {
                   </div>
 
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.pucc ? (
+                    {initialState.pucc && initialState.pucc[0] && initialState.pucc[0].uploadImage ? (
                       <button
                         className="bg-Green-700 active:bg-Green-600 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
@@ -382,7 +382,7 @@ export default function HeaderStats() {
                   </div>
 
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.insurance ? (
+                    {initialState.insurance && initialState.insurance[0] && initialState.insurance[0].uploadImage ? (
                       <button
                         className="bg-Green-700 active:bg-Green-600 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
