@@ -14,6 +14,14 @@ router.post("/register", async (req, res) => {
   });
 
   try {
+    var existuser = await User.findOne({ email: email }).exec();
+
+    if (existuser) {
+      return res.status(500).json({
+        msg: "Account already exists",
+      });
+    }
+
     await user.save();
     return res.status(200).json({
       msg: "User Registered Successfully",
@@ -36,14 +44,6 @@ router.post("/login", async (req, res) => {
       data: "",
     });
   } else {
-    // Token generation
-    var token = jwt.sign(
-      { userId: userExist._id, email: userExist.email },
-      "secret",
-      { expiresIn: "1h" }
-    );
-    console.log("Token: " + token);
-
     if (userExist.password === password) {
       return res.status(200).json({
         msg: "Login Successful",

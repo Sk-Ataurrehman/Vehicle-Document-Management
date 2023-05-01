@@ -3,9 +3,11 @@ const Contract = require("../../Contract");
 const contract = new Contract();
 const instance = contract.initContract();
 
+const verifyCop = require("../middlewares/verifyCop");
+
 var User = require("../models/User");
 
-router.post("/", async (req, res, next) => {
+router.post("/", verifyCop, async (req, res, next) => {
   console.log(req.body.account);
   const id = await instance.methods.getId().call();
   const userDetails = await instance.methods.get_user_details(id).call();

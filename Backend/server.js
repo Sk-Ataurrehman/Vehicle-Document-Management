@@ -28,11 +28,13 @@ const uploadRoute = require("./api/routes/upload");
 const userRoute = require("./api/routes/user");
 const activateRoute = require("./api/routes/activate");
 const viewRoute = require("./api/routes/view");
+const copRoute = require("./api/routes/cop.js");
 
 app.use("/upload", uploadRoute);
 app.use("/auth", userRoute);
 app.use("/activate", activateRoute);
 app.use("/view", viewRoute);
+app.use("/cop", copRoute);
 
 app.get("/test", (req, res, next) => {
   console.log("test route");
