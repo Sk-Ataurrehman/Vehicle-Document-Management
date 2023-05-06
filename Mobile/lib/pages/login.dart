@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/pages/home.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
+  var token;
   @override
   State<Login> createState() => _LoginState();
 }
@@ -13,6 +17,7 @@ class _LoginState extends State<Login> {
   String emailAddressError, passwordError;
 
   bool passwordVisibility = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,60 +80,97 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
                   ),
 
-                  Container(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        backgroundColor: Colors.lightBlueAccent[700],
-                        textStyle: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                      child: Text('LOGIN'),
-                      onPressed: () {
-                        if (emailAddress.text.isEmpty) {
-                          setState(() {
-                            emailAddressError = 'Email Address is compulsory';
-                          });
-                        }
-
-                        if (password.text.isEmpty) {
-                          setState(() {
-                            passwordError = "Password can't be Empty";
-                          });
-                        }
-
-                        if (emailAddress.text == "admin@gmail.com") {
-                          setState(() {
-                            emailAddressError = null;
-                          });
-
-                          if (password.text == "admin@123") {
-                            setState(() {
-                              passwordError = null;
-                            });
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home()));
-                          } else {
-                            setState(() {
-                              passwordError = "Invalid Password";
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            emailAddressError = "Invalid Email Address";
-                          });
-                        }
-                      },
-                    ),
-                    width: double.infinity,
-                    padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  )
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : Container(
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.lightBlueAccent[700],
+                              textStyle: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                            child: Text('LOGIN'),
+                            onPressed: () async {
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = true;
+                                  verifyCop();
+                                });
+                              }
+                            },
+                          ),
+                          width: double.infinity,
+                          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                        )
                 ])
           ],
         ),
       ),
     );
+  }
+
+  verifyCop() async {
+    if (emailAddress.text.isEmpty) {
+      setState(() {
+        emailAddressError = 'Email Address is compulsory';
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        emailAddressError = null;
+        isLoading = false;
+      });
+    }
+
+    if (password.text.isEmpty) {
+      setState(() {
+        passwordError = "Password can't be Empty";
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        passwordError = null;
+        isLoading = false;
+      });
+    }
+
+    Map data = {"email": emailAddress.text, "password": password.text};
+    print("Email Address: " + data['email']);
+    print("Password: " + data['password']);
+
+    var response = await http
+        .post(Uri.parse("http://192.168.0.104:5000/cop/login"), body: data);
+
+    print("Status Code: " + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      var jsonData = jsonDecode(response.body);
+      print(jsonData);
+      final snackBar = SnackBar(
+        content: Text(jsonData['msg']),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      print(jsonData['token']);
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString("token", jsonData['token']);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      var jsonData = jsonDecode(response.body);
+      final snackBar = SnackBar(
+        content: Text(jsonData['msg']),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
