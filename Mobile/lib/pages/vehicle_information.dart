@@ -24,7 +24,7 @@ class _VehicleInformationState extends State<VehicleInformation> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
     try {
-      final url = "http://192.168.0.104:5000/view";
+      final url = "http://192.168.0.110:5000/view";
       final account = widget.url.split("/")[4];
       var json = {"account": account};
       var response = await http

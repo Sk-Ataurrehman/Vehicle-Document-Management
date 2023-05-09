@@ -23,12 +23,9 @@ export const signUpUser = (body) => {
       body: JSON.stringify(body),
     });
     let response = await res.json();
+    console.log(response);
     if (!res.ok) {
-      swal(
-        "Something Went Wrong!",
-        "Check the value in entered fields!",
-        "error"
-      );
+      swal("Something Went Wrong!", response.msg, "error");
       console.log("Failed");
     } else {
       console.log(response);
@@ -50,7 +47,7 @@ export const signInUser = (body) => {
 
     if (!res.ok) {
       console.log("Failed");
-      swal("Login Failed", "Check your Email address and Password", "error");
+      swal("Login Failed", response.msg, "error");
     } else {
       dispatch(authSlice.actions.login({ userData: response.data }));
     }
@@ -89,6 +86,9 @@ export const authSlice = createSlice({
   reducers: {
     login(state, action) {
       state.isLogin = true;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("login", "true");
+      }
       state.id = action.payload.userData._id;
       state.fullName = action.payload.userData.fullName;
       state.email = action.payload.userData.email;

@@ -142,7 +142,7 @@ router.post("/uploadrc", upload.single("image"), async (req, res, next) => {
 
         const result1 = await instance.methods.get_rc_details(response).call();
         console.log(result1);
-        j.uploadImage = "/uploads/" + req.body.email + "-rc.png";
+        j.uploadImage = result1["0"];
         a.push(j);
         await User.findOneAndUpdate(
           { email: req.body.email },
@@ -176,20 +176,6 @@ router.post("/uploadpuc", upload.single("image"), (req, res, next) => {
     // logger: (m) => console.log(m),
   })
     .then(async ({ data: { text } }) => {
-      // t = text.split("\n");
-      // for (let i = 0; i < t.length; i++) {
-      //   s = t[i].split("-");
-
-      //   if (s[0] != "") {
-      //     a.push(s);
-      //   }
-      // }
-      // for (let i = 0; i < a.length; i++) {
-      //   a[i][0] = a[i][0].replace(" ", "_");
-      //   j[a[i][0]] = a[i][1];
-      // }
-      // console.log(j);
-
       t = text.split("\n");
       t.forEach((line) => {
         if (line.includes("Validity upto")) {
@@ -234,7 +220,7 @@ router.post("/uploadpuc", upload.single("image"), (req, res, next) => {
         const result1 = await instance.methods.get_puc_details(response).call();
         console.log(result1);
         res.status(200).json(result1);
-        obj.uploadImage = "/uploads/" + req.body.email + "-puc.png";
+        obj.uploadImage = result1["0"];
 
         arr.push(obj);
 
@@ -322,8 +308,9 @@ router.post("/uploadinsurance", upload.single("image"), (req, res, next) => {
         const result1 = await instance.methods
           .get_insurance_details(response)
           .call();
+        console.log(result1);
+        j.uploadImage = result1["0"];
 
-        j.uploadImage = "/uploads/" + req.body.email + "-insurance.png";
         arr.push(j);
         await User.findOneAndUpdate(
           { email: req.body.email },

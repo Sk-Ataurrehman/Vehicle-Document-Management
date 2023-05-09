@@ -140,7 +140,7 @@ class _LoginState extends State<Login> {
     print("Password: " + data['password']);
 
     var response = await http
-        .post(Uri.parse("http://192.168.0.104:5000/cop/login"), body: data);
+        .post(Uri.parse("http://192.168.0.110:5000/cop/login"), body: data);
 
     print("Status Code: " + response.statusCode.toString());
     if (response.statusCode == 200) {

@@ -22,12 +22,39 @@ export default function HeaderStats() {
   const [rc, setrc] = useState(null);
   const [puc, setPuc] = useState(null);
 
+  const [rchash, setRchash] =
+    initialState.rc && initialState.rc[0]
+      ? useState(initialState.rc[0].uploadImage)
+      : useState("");
+  const [rcValid, setRcvalid] =
+    initialState.rc && initialState.rc[0]
+      ? useState(initialState.rc[0].validity)
+      : useState("");
+
+  const [puchash, setPuchash] =
+    initialState.pucc && initialState.pucc[0]
+      ? useState(initialState.pucc[0].uploadImage)
+      : useState("");
+  const [pucValid, setpucvalid] =
+    initialState.pucc && initialState.pucc[0]
+      ? useState(initialState.pucc[0].validity)
+      : useState("");
+
+  const [insurancehash, setInsurancehash] =
+    initialState.insurance[0] && initialState.insurance[0]
+      ? useState(initialState.insurance[0].uploadImage)
+      : useState("");
+  const [insuranceValid, setInsuranceValid] =
+    initialState.insurance && initialState.insurance[0]
+      ? useState(initialState.insurance[0].validity)
+      : useState("");
+
   const [url, setUrl] = useState("");
   const qrRef = useRef();
 
   let viewRCBtn;
-  if (initialState.rc && initialState.rc[0] && initialState.rc[0].uploadImage) {
-    var ref = "http://localhost:5000" + initialState.rc[0].uploadImage;
+  if (rchash != "") {
+    var ref = "https://ipfs.io/ipfs/" + rchash + "/image/rc.png";
     viewRCBtn = (
       <a
         href={ref}
@@ -41,8 +68,8 @@ export default function HeaderStats() {
   }
 
   let viewPUCCBtn;
-  if (initialState.pucc && initialState.pucc[0] && initialState.pucc[0].uploadImage) {
-    var ref = "http://localhost:5000" + initialState.pucc[0].uploadImage;
+  if (puchash != "") {
+    var ref = "https://ipfs.io/ipfs/" + puchash + "/image/puc.png";
     viewPUCCBtn = (
       <a
         href={ref}
@@ -56,8 +83,8 @@ export default function HeaderStats() {
   }
 
   let viewInsBtn;
-  if (initialState.insurance && initialState.insurance[0] && initialState.insurance[0].uploadImage) {
-    var ref = "http://localhost:5000" + initialState.insurance[0].uploadImage;
+  if (insurancehash != "") {
+    var ref = "https://ipfs.io/ipfs/" + insurancehash + "/image/insurance.png";
     viewInsBtn = (
       <a
         href={ref}
@@ -96,12 +123,13 @@ export default function HeaderStats() {
     if (jsonData.error) {
       swal("Error", jsonData.error, "error");
     } else {
+      setRcvalid(jsonData["2"]);
+      setRchash(jsonData["0"]);
       swal(
         "Success",
         "Registration Certificate uploaded successfully!",
         "success"
       );
-      window.location.reload();
     }
   }
 
@@ -118,12 +146,13 @@ export default function HeaderStats() {
     if (jsonData.error) {
       swal("Error", jsonData.error, "error");
     } else {
+      setPuchash(jsonData["0"]);
+      setpucvalid(jsonData["2"]);
       swal(
         "Success",
         "Pollution Control Certificate uploaded successfully!",
         "success"
       );
-      window.location.reload();
     }
   }
 
@@ -141,8 +170,9 @@ export default function HeaderStats() {
     if (jsonData.error) {
       swal("Error", jsonData.error, "error");
     } else {
+      setInsuranceValid(jsonData["2"]);
+      setInsurancehash(jsonData["0"]);
       swal("Success", "Insurance uploaded successfully!", "success");
-      window.location.reload();
     }
   }
 
@@ -152,23 +182,23 @@ export default function HeaderStats() {
 
   async function generateQR() {
     if (
-      initialState.pucc[0] &&
-      initialState.pucc[0].validity &&
-      initialState.rc[0] &&
-      initialState.rc[0].validity &&
-      initialState.insurance[0] &&
-      initialState.insurance[0].validity
+      puchash != "" &&
+      pucValid != "" &&
+      rchash != "" &&
+      rcValid != "" &&
+      insurancehash != "" &&
+      insuranceValid != ""
     ) {
       var today = new Date().toISOString();
-      var pucDatearr = initialState.pucc[0].validity.split("/");
+      var pucDatearr = pucValid.split("/");
       var puccdate = pucDatearr[2] + "-" + pucDatearr[1] + "-" + pucDatearr[0];
       var pucdate = new Date(puccdate).toISOString();
 
-      var rcDatearr = initialState.rc[0].validity.split("-");
+      var rcDatearr = rcValid.split("-");
       var rccdate = rcDatearr[2] + "-" + rcDatearr[1] + "-" + rcDatearr[0];
       var rcdate = new Date(rccdate).toISOString();
 
-      var insDatearr = initialState.insurance[0].validity.split("-");
+      var insDatearr = insuranceValid.split("-");
       var inssdate = insDatearr[2] + "-" + insDatearr[1] + "-" + insDatearr[0];
       var insdate = new Date(inssdate).toISOString();
 
@@ -198,7 +228,7 @@ export default function HeaderStats() {
               swal(
                 "Upload Documents",
                 "Please, upload all the documents required below!",
-                "success"
+                "error"
               );
             }
           } else {
@@ -210,6 +240,12 @@ export default function HeaderStats() {
       } else {
         swal("Expired", "Your RC has expired, re-upload!", "error");
       }
+    } else {
+      swal(
+        "Upload Documents",
+        "Please, upload all the documents to generate your QR Code!",
+        "info"
+      );
     }
   }
 
@@ -285,7 +321,9 @@ export default function HeaderStats() {
                     />
                   </div>
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.rc && initialState.rc[0] && initialState.rc[0].uploadImage ? (
+                    {initialState.rc &&
+                    initialState.rc[0] &&
+                    initialState.rc[0].uploadImage ? (
                       <button
                         className="bg-Green-700 active:bg-Green-700 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
@@ -305,10 +343,10 @@ export default function HeaderStats() {
 
                     {viewRCBtn}
                   </div>
-                  {initialState.rc[0] && initialState.rc[0].validity ? (
+                  {rcValid != "" ? (
                     <label className="label-validity font-bold">
                       {" "}
-                      Valid Upto: {initialState.rc[0].validity}{" "}
+                      Valid Upto: {rcValid}{" "}
                     </label>
                   ) : null}
                 </div>
@@ -335,7 +373,7 @@ export default function HeaderStats() {
                   </div>
 
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.pucc && initialState.pucc[0] && initialState.pucc[0].uploadImage ? (
+                    {puchash != "" ? (
                       <button
                         className="bg-Green-700 active:bg-Green-600 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
@@ -355,10 +393,10 @@ export default function HeaderStats() {
 
                     {viewPUCCBtn}
                   </div>
-                  {initialState.pucc[0] && initialState.pucc[0].validity ? (
+                  {pucValid != "" ? (
                     <label className="label-validity font-bold">
                       {" "}
-                      Valid Upto: {initialState.pucc[0].validity}{" "}
+                      Valid Upto: {pucValid}{" "}
                     </label>
                   ) : null}
                 </div>
@@ -382,7 +420,7 @@ export default function HeaderStats() {
                   </div>
 
                   <div className="w-full lg:w-12/12 px-4 text-center">
-                    {initialState.insurance && initialState.insurance[0] && initialState.insurance[0].uploadImage ? (
+                    {insurancehash != "" ? (
                       <button
                         className="bg-Green-700 active:bg-Green-600 mb-2 mt-2 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="button"
@@ -402,11 +440,10 @@ export default function HeaderStats() {
 
                     {viewInsBtn}
                   </div>
-                  {initialState.insurance[0] &&
-                  initialState.insurance[0].validity ? (
+                  {insuranceValid != "" ? (
                     <label className="label-validity font-bold">
                       {" "}
-                      Valid Upto: {initialState.insurance[0].validity}{" "}
+                      Valid Upto: {insuranceValid}{" "}
                     </label>
                   ) : null}
                 </div>

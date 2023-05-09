@@ -8,7 +8,7 @@ import Auth from "layouts/Auth.js";
 import Link from "next/link";
 
 export default function Login() {
-  const [email, setEmail] = useState("shaikhataurrehman0@gmail.com");
+  const [email, setEmail] = useState("siddiquimim@gmail.com");
   const [password, setPassword] = useState("12345");
 
   const dispatch = useDispatch();

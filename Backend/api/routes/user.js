@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
   const userExist = await User.findOne({ email: email });
   if (!userExist) {
     return res.status(400).json({
-      msg: "Wrong username or password",
+      msg: "Authentication Failed!",
       data: "",
     });
   } else {
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        msg: "Wrong password",
+        msg: "Authentication Failed!",
         data: "",
       });
     }

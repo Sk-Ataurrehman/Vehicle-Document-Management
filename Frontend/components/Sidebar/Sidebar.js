@@ -146,7 +146,9 @@ export default function Sidebar() {
               </li>
 
               <li className="items-center">
-                {localStorage && localStorage.getItem("account") ? (
+                {typeof window !== "undefined" &&
+                localStorage &&
+                localStorage.getItem("account") ? (
                   <button
                     className={
                       "text-xs uppercase py-3 font-bold block " +

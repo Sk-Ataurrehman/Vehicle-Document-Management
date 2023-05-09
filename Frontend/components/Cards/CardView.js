@@ -38,26 +38,28 @@ export default function CardSettings() {
   const [insExp, setinsExp] = useState(initialValue.insExp);
 
   async function getDetails() {
-    var body = {
-      account: localStorage.getItem("account"),
-    };
-    let response = await fetch("http://localhost:5000/view", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    const jsonData = await response.json();
+    if (typeof window !== "undefined") {
+      var body = {
+        account: localStorage.getItem("account"),
+      };
+      let response = await fetch("http://localhost:5000/view", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const jsonData = await response.json();
 
-    setinsDocHash(jsonData["insuranceDetails"][0]);
-    setinsExp(jsonData["insuranceDetails"][2]);
+      setinsDocHash(jsonData["insuranceDetails"][0]);
+      setinsExp(jsonData["insuranceDetails"][2]);
 
-    setpucDocHash(jsonData["pucDetails"][0]);
-    setpucExp(jsonData["pucDetails"][2]);
+      setpucDocHash(jsonData["pucDetails"][0]);
+      setpucExp(jsonData["pucDetails"][2]);
 
-    setrcDocHash(jsonData["rcDetails"][0]);
-    setrcExp(jsonData["rcDetails"][2]);
+      setrcDocHash(jsonData["rcDetails"][0]);
+      setrcExp(jsonData["rcDetails"][2]);
+    }
   }
 
   const initialState = {
